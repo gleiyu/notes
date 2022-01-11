@@ -1,6 +1,9 @@
 ## SQL开发基础
+
 无特殊说明均默认为使用mysql8.0环境
+
 ### distinct
+
 ``` sql
 -- distinct 可配合 avg，count，sum一起使用，只计算不重复的值
 with test as (
@@ -20,7 +23,9 @@ select
     count(distinct id) as count_distinct
 from test
 ```
+
 ### 集合操作
+
 ```sql
 -- union 会去重,相当于union all后再全表去重
 select 1 as id 
@@ -45,7 +50,9 @@ select 2 as id
 intersect 
 select 1 as id
 ```
+
 ### update from
+
 ```sql
 -- oracle 
 update table2 t2 
@@ -74,7 +81,9 @@ set colb = t2.colb
 from table1 t1 inner join table2 t2
 on t1.id = t2.id;
 ```
+
 ### 递归查询
+
 ```sql
 -- 生成从1到100的连续数字
 -- hive 
@@ -110,7 +119,9 @@ with recursive tt as (
 )
 select * from tt;
 ```
+
 ### 行列转换
+
 ```sql
 -- 行转列
 with test as (
@@ -196,7 +207,9 @@ from
 ) t1 
 where t1.rowid1 = t1.rowid2 
 ```
+
 ### json处理
+
 ```sql
 -- json字符串：{"id":1,"token":"1234","user_name":"tom"}
 -- get_json_object
@@ -212,7 +225,9 @@ select
   j.user_name
 from jsonDemo lateral view json_tuple(jsonStr, 'id','token','user_name') j as id,token,user_name;
 ```
+
 ### 虚拟表
+
 ```sql
 -- stack 
 select stack(2, 0, 'tom',1,'jack') as (id, name)
@@ -224,7 +239,9 @@ with test as (
 )
 select * from test;
 ```
+
 ### 窗口函数
+
 ```sql
 -- sql中窗口函数执行仅在order by语句前，在where、group by 等语句后
 -- 模拟数据
@@ -306,7 +323,9 @@ select
   percent_rank() over(partition by name order by orderdate) as pr
 from test;
 ```
+
 ### cube
+
 ```sql
 -- grouping sets 根据group by的维度的不同组合进行聚合，等价于不同维度的group by结果进行union all
 with test as (
@@ -386,7 +405,9 @@ group by name,month
 with rollup -- 先按name,month汇总，再按name汇总，再全局汇总
 ;
 ```
+
 ### 排序
+
 ```sql
 -- 以下为hive中的排序规则
 -- order 全局排序
@@ -400,4 +421,35 @@ select * from test distribute by name sort by id desc
 
 -- cluster by 不能指定降序，只能默认升序
 select * from test cluster by id
+```
+
+### 数据抽样
+
+```sql 
+-- hive 
+-- rand() 随机抽样
+select * from table_name where col in ('xx') distribute by rand() sort by rand() limit 10000;
+select * from table_name where col in ('xx') order by rand() limit 10000;
+-- tablesample() 块抽样
+select * from table_name tablesample(10 percent);
+select * from table_name tablesample(10000 rows);
+select * from table_name tablesample(10M);
+-- 分桶抽样 tablesample(bucket x out of y [on colName]) 将表按colName分y桶抽样第x桶
+select * from table_name tablesample(bucket 2 out of 8 on rand());
+
+-- oracle 
+-- sample 抽样
+-- 全表扫表随机抽样20%再随机取前5条
+select * from table_name sample(20) where rownum <= 5;
+-- 采样扫描20%再随机取前5条
+select * from table_name sample block(20) where rownum <= 5;
+-- 采样扫描20%再随机取前5条，使用相同seed会返回固定结果集
+select * from table_name sample(20) seed(8) where rownum <= 5;
+-- dbms_random.value 
+select * from (select * from table_name order by dbms_random.value()) where rownum <= 5;
+
+-- mysql 
+select * from table_name where col in ('xx') order by rand() limit 10000;
+-- 整表抽样10%
+select * from table_name where rand() < 0.1
 ```
