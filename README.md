@@ -10,6 +10,9 @@
 
 ### Hadoop
 
+1. [Apache hadoop安装部署](/docs/hadoop/apache%20hadoop安装部署.md)
+2. [Ambari2.7.3+HDP3.1.0.0部署](docs/hadoop/Ambari2.7.3+HDP3.1.0.0部署.md)
+
 ### Hive
 
 1. [apache hive安装部署](docs/hive/apache%20hive安装部署.md)
