@@ -166,15 +166,15 @@
    [mysql]
    default-character-set=utf8mb4
    ```
-4. 启动数据库
+4. 注册系统服务
+   ```shell
+   cp -a support-files/mysql.server /etc/init.d/mysqld
+   ```
+5. 启动数据库
    ```shell
    service mysqld start
    #关闭服务
    service mysqld stop 
-   ```
-5. 注册系统服务
-   ```shell
-   cp -a support-files/mysql.server /etc/init.d/mysqld
    ```
 6. 配置环境变量
    ```shell

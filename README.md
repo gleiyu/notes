@@ -10,6 +10,11 @@
 
 ### Hadoop
 
+### Hive
+
+1. [apache hive安装部署](docs/hive/apache%20hive安装部署.md)
+2. [自定义函数开发](docs/hive/自定义函数开发.md)
+
 ### Mysql
 
 1. [mysql单机部署](docs/mysql/mysql单机部署.md)
